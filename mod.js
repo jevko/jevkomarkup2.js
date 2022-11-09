@@ -1,4 +1,4 @@
-export const convert = (jevko) => node(jevko)
+export const convert = (jevko) => nodes(jevko)
 
 const string = (jevko) => {
   const {subjevkos, suffix} = jevko
@@ -6,7 +6,7 @@ const string = (jevko) => {
   throw Error('Text node or attribute value cannot have children.')
 }
 
-const node = (jevko) => {
+const nodes = (jevko) => {
   let mode = 'tag'
 
   const children = []
@@ -24,7 +24,7 @@ const node = (jevko) => {
       for (const {prefix, jevko} of subs) {
         const key = prefix.trim()
         const value = string(jevko)
-        if (key in attributes) throw Error('oops')
+        if (key in attributes) throw Error(`Duplicate attribute '${key}' in ${tag}.`)
         attributes[key] = value
       }
       if (tag.endsWith('/') === false) {
@@ -41,7 +41,7 @@ const node = (jevko) => {
     } else {
       children.push({
         ...part,
-        children: node(jevko)
+        children: nodes(jevko)
       })
       mode = 'tag'
     }
